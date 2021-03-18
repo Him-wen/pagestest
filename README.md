@@ -1,7 +1,7 @@
 # issue相关汇总
 [数组](https://github.com/Him-wen/itblogs/issues/1)  
-[手写](https://github.com/Him-wen/itblogs/issues/2)
-[类数组](https://github.com/Him-wen/itblogs/issues/3)
+[手写](https://github.com/Him-wen/itblogs/issues/2)  
+[类数组](https://github.com/Him-wen/itblogs/issues/3)  
 [扁平化](https://github.com/Him-wen/itblogs/issues/4)
 [去重](https://github.com/Him-wen/itblogs/issues/5)
 [继承](https://github.com/Him-wen/itblogs/issues/6)

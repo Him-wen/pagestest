@@ -27,3 +27,11 @@
 [Vue原理-数据响应式与依赖收集Object](https://github.com/Him-wen/itblogs/issues/26)  
 [Vue原理-Array数据绑定](https://github.com/Him-wen/itblogs/issues/27)  
 [Javascript-理解虚拟 DOM](https://github.com/Him-wen/itblogs/issues/28)  
+# JS系列
+[JS-执行原理]()  
+[JS-原型和继承]()  
+[JS-数据类型]()  
+[JS-浏览器事件循环]()  
+[JS-一些模拟实现]()  
+[JS-函数式编程]()  
+[JS-Promise异步系列]()  

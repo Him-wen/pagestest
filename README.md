@@ -1,4 +1,4 @@
-# issue相关汇总
+# issue相关汇总 update...
 [Javascript基础-数组实例方法篇](https://github.com/Him-wen/itblogs/issues/1)  
 [Javascript系列手写](https://github.com/Him-wen/itblogs/issues/2)  
 [Javascript基础-类数组对象与arguments](https://github.com/Him-wen/itblogs/issues/3)  

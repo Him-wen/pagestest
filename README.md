@@ -1,6 +1,9 @@
 # issue相关汇总 update...
-[Javascript基础-数组实例方法篇](https://github.com/Him-wen/itblogs/issues/1)  
-[Javascript系列手写](https://github.com/Him-wen/itblogs/issues/2)  
+[Javascript系列](https://github.com/Him-wen/itblogs/tree/main/JavaScript%E7%B3%BB%E5%88%97)  
+[浏览器](https://github.com/Him-wen/itblogs/tree/main/%E6%B5%8F%E8%A7%88%E5%99%A8)  
+
+
+
 [Javascript基础-类数组对象与arguments](https://github.com/Him-wen/itblogs/issues/3)  
 [Javascript基础-数组扁平化](https://github.com/Him-wen/itblogs/issues/4)  
 [Javascript基础-数组去重](https://github.com/Him-wen/itblogs/issues/5)  

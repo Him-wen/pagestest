@@ -1,5 +1,15 @@
 [vuejs部分相关的源码](https://github.com/vuejs/vue/blob/dev/src/core/index.js)
 
+[变化侦测](https://github.com/Him-wen/itblogs/blob/main/Vue/Vue%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94%E5%BC%8F%E4%B8%8E%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86Object.md#%E8%AE%A9object%E6%95%B0%E6%8D%AE%E5%8F%98%E7%9A%84%E5%8F%AF%E8%A7%82%E6%B5%8B)
+[让object数据变的可观测](https://github.com/Him-wen/itblogs/blob/main/Vue/Vue%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94%E5%BC%8F%E4%B8%8E%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86Object.md#%E8%AE%A9object%E6%95%B0%E6%8D%AE%E5%8F%98%E7%9A%84%E5%8F%AF%E8%A7%82%E6%B5%8B)  
+[依赖收集](https://github.com/Him-wen/itblogs/blob/main/Vue/Vue%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94%E5%BC%8F%E4%B8%8E%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86Object.md#%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86)  
+[https://github.com/Him-wen/itblogs/blob/main/Vue/Vue%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94%E5%BC%8F%E4%B8%8E%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86Object.md#%E4%BD%95%E6%97%B6%E6%94%B6%E9%9B%86%E4%BE%9D%E8%B5%96%E9%80%9A%E7%9F%A5%E4%BE%9D%E8%B5%96%E6%9B%B4%E6%96%B0-gettersetter](https://github.com/Him-wen/itblogs/blob/main/Vue/Vue%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94%E5%BC%8F%E4%B8%8E%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86Object.md#%E4%BD%95%E6%97%B6%E6%94%B6%E9%9B%86%E4%BE%9D%E8%B5%96%E9%80%9A%E7%9F%A5%E4%BE%9D%E8%B5%96%E6%9B%B4%E6%96%B0-gettersetter)  
+[依赖到底是谁](https://github.com/Him-wen/itblogs/blob/main/Vue/Vue%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94%E5%BC%8F%E4%B8%8E%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86Object.md#%E4%BE%9D%E8%B5%96%E5%88%B0%E5%BA%95%E6%98%AF%E8%B0%81a)  
+[简单总结一下](https://github.com/Him-wen/itblogs/blob/main/Vue/Vue%E5%8E%9F%E7%90%86-%E6%95%B0%E6%8D%AE%E5%93%8D%E5%BA%94%E5%BC%8F%E4%B8%8E%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86Object.md#%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B)  
+[]()  
+[]()  
+
+
 # 变化侦测  
 UI = render(state)
 上述公式中：状态state是输入，页面UI输出，状态输入一旦变化了，页面输出也随之而变化。我们把这种特性称之为数据驱动视图。

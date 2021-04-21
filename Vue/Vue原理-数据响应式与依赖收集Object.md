@@ -10,7 +10,7 @@
 并且给value新增一个**__ob__属性**，值为该value的Observer实例(**this**)。这个操作相当于为value打上标记，表示它已经被转化成响应式了，避免重复操作
 
 然后判断数据的类型，只有object类型的数据才会调用**walk**将每一个属性转换成getter/setter的形式来侦测变化。 最后，在defineReactive中当传入的属性值还是一个object时使用new observer（val）来递归子属性，这样我们就可以把obj中的所有属性（包括子属性）都转换成getter/seter的形式来侦测变化。 也就是说，只要我们将一个object传到observer中，那么这个object就会变成可观测的、响应式的object。
-```
+```javascript
 /**
  * Observer类会通过递归的方式把一个对象的所有属性都转化成可观测对象
  */
@@ -103,7 +103,7 @@ Watcher相关代码见源码
 
 ## Dep类
 
-  ```
+  ```javascript
   // 源码位置：src/core/observer/dep.js
 // dep示例就相当于一个依赖数组 不过功能更多 
 export default class Dep {

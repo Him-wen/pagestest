@@ -1,5 +1,14 @@
 [vuejs部分相关的源码](https://github.com/vuejs/vue/blob/dev/src/core/index.js)
 
+# 变化侦测  
+UI = render(state)
+上述公式中：状态state是输入，页面UI输出，状态输入一旦变化了，页面输出也随之而变化。我们把这种特性称之为数据驱动视图。
+
+OK，有了基本概念以后，我们再把上述公式拆成三部分：state、render()以及UI。我们知道state和UI都是用户定的，而不变的是这个render()。所以Vue就扮演了render()这个角色，当Vue发现state变化之后，经过一系列加工，最终将变化反应在UI上。
+
+那么第一个问题来了，Vue怎么知道state变化了呢？
+**数据每次的读和写**可以参考MDN：[Object.defineProperty](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+
 # 让object数据变的可观测
  
  要将数据变的‘可观测’，我们就要借助前言中提到的**Object.defineProperty**方法了，在本文中，我们就使用这个方法使数据变得“可观测”。
@@ -30,7 +39,7 @@
   
     walk (obj: Object) {
       const keys = Object.keys(obj)//获取obj对象的键值[1,2,3]
-      for (let i = 0; i < keys.length; i++) {
+      for (let i = 0; i < keys.length; i++) {//遍历每一个对象。将其转化为响应式
         defineReactive(obj, keys[i])//调用下面的方法 keys[i]为对象的属性，相当于就是key
       }
     }
@@ -47,7 +56,7 @@
       val = obj[key]
     }
     if(typeof val === 'object'){
-        new Observer(val)//当对象里面还是对象的话就递归处理
+        new Observer(val)//当传入的属性值还是一个object时使用new observer（val）来递归子属性，这样我们就可以把obj中的所有属性（包括子属性）都转换成getter/seter的形式来侦测变化
     }
     Object.defineProperty(obj, key, {
       enumerable: true,
@@ -68,36 +77,42 @@
     })
   }
   ```
+  只要我们将一个**bject**传到observer中，那么这个object就会变成**可观测的、响应式的object**。
+  
+observer类位于源码的src/core/observer/index.js中。
+
+那么现在，我们就可以这样定义car:
+```javascript
+let a = new Observer({
+  'b':'hello world',
+  'c':'vue'
+})
+```
+这样，car的两个属性都变得可观测了。
 
 # 依赖收集
+**首先记住一句话：当数据发生变化时 视图里谁用到了这个数据就更新谁呗。**
 成分
 **Watcher = 使用者= A**
 **这个数据 = obj**
 **Dep = 相当于这个数据的数组集合**
 # 什么是依赖？ 
-  “A”用到了这个数据  “A”就是依赖
+  “A”**用到**了这个数据 === “A”就是**依赖**了这个数据
   "谁用到了这个数据" 称为 "谁依赖了这个数据" 
+# 什么是依赖收集
+  当一个数据(XXX)变化时：视图里谁用到了这个数据(XXX)就更新谁，我们换个**优雅说法**：我们把"谁用到了这个数据"称为"谁依赖了这个数据",我们给每个数据(XXX)都建一个依赖数组 **[XXX的依赖数组]** (因为一个数据(XXX)可能被多处使用)，谁依赖了这个数据(XXX)(即谁用到了这个数据(XXX))我们就把谁放入这个依赖数组中，那么当这个数据(XXX)发生变化的时候，我们就去它对应的 **[XXX的依赖数组]** 中，把每个**依赖**都通知一遍，告诉他们："你们 依赖 的这个数据(XXX)变啦，你们该更新啦！"。这个过程就是依赖收集。
 
  # 何时收集依赖？通知依赖更新 getter/setter
 当A获取了这个数据的时候，触发getter属性，那么我们就可以在getter中收集这个依赖A。
+同样，当这个数据变化时会触发setter属性，那么我们就可以在setter中通知依赖更新。
 
-当这个数据发生变化的时候，我们就去它对应的依赖数组中，把每个依赖都通知一遍，告诉他们："你们依赖的数据变啦，你们该更新啦！"
-
-
- # 依赖到底是谁
- 相对于变化的这个数据obj对象来说，如果A用到了obj对象(这个数据)，A就是依赖，就为A创建一个Watcher实例（管理器）
- 在之后数据变化setter时，我们不直接去通知依赖更新(之前是直接setter里面通知的)，而是通知A 依赖对应的Watch实例，由Watcher实例去通知A真正的视图。
- Watcher 就是 “谁” 相当于是 使用者A 当这个数据Dep 变化的时候 不直接通知更新，而是由Watcher代劳通知依赖更新
-
-```
-Watcher相关代码见源码
-```
+当这个数据发生变化的时候，我们就去它对应的 *[XXX的依赖数组]** 中，把每个依赖(例如A)都通知一遍，告诉他们："你们依赖的 **这个数据(XXX)** 变啦，你们该更新啦！"
 
 
-# 以及收集的依赖存放到何处？那么我们收集的依赖到底是谁？
- 我们给 每个数据(主角)都建一个依赖数组Dep，谁(A)依赖了这个数据我们就把谁(A)放入这个依赖数组中。
- 单单用一个数组来存放依赖的话，功能好像有点欠缺并且代码过于耦合。=>修改为依赖管理器Dep
- 我们应该将依赖数组的功能扩展一下，更好的做法是我们应该为每一个数据都建立一个依赖管理器Dep(实例 是相当于数据而言 )，如果小明用到了这个数据:obj对象，就加入到Dep(PS：后面又加了一层Watcher)
+# 以及收集的依赖存放到何处？
+ 我们给 每个数据(XXX)都建一个依赖数组**Dep**，谁(A)依赖了这个数据(XXX)我们就把谁(A)放入这个依赖数组中。
+ 单单用一个数组来存放依赖的话，功能好像有点欠缺并且代码过于耦合。=>**修改为依赖管理器Dep**
+ 我们应该将依赖数组的功能扩展一下，更好的做法是我们应该为每一个数据都建立一个依赖管理器Dep(实例 是相当于数据而言 )，如果小明用到了这个数据(XXX)，就加入到Dep(PS：后面又加了一层Watcher)
 
  把这个数据所有的依赖都管理起来
 
@@ -146,6 +161,42 @@ export default class Dep {
   }
   ```
 
+有了依赖管理器后，我们就可以在getter中收集依赖，在setter中通知依赖更新了，代码如下：
+和之前的**defineReactive**对比 有三处注释的地方不一样。
+```javascript
+function defineReactive (obj,key,val) {
+  if (arguments.length === 2) {
+    val = obj[key]
+  }
+  if(typeof val === 'object'){
+    new Observer(val)
+  }
+  const dep = new Dep()  //实例化一个依赖管理器，生成一个依赖管理数组dep
+  Object.defineProperty(obj, key, {
+    enumerable: true,
+    configurable: true,
+    get(){
+      dep.depend()    // 在getter中收集依赖
+      return val;
+    },
+    set(newVal){
+      if(val === newVal){
+          return
+      }
+      val = newVal;
+      dep.notify()   // 在setter中通知依赖更新
+    }
+  })
+}
+```
+ # 依赖到底是谁
+ 相对于变化的这个数据(XXX)对象来说，如果A用到了(这个数据(XXX))，A就是依赖，就为A创建一个 **Watcher实例**（管理器）**划重点**：这里是将依赖数组 拓展变成Watcher实例(Object)
+ 在之后数据变化setter时，我们不直接去通知依赖更新(之前是直接setter里面通知的)，而是通知A 依赖对应的**Watcher实例**，由**Watcher实例**去通知 A 真正的视图。
+ Watcher 就是 “谁” 相当于是 使用者A 当这个数据Dep 变化的时候 不直接通知更新(getter setter里面)，而是由**Watcher实例**代劳通知依赖更新
+
+```javascript
+Watcher相关代码见源码
+```
 
   // 只要我们将一个object传到observer中，那么这个object就会变成可观测的、响应式的object。
   # 简单总结一下：

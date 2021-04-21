@@ -7,7 +7,7 @@ getter与Object同理
 其实使用的是拦截器中重写的方法，而不再使用Array.prototype上的原生方法
 ![image](https://user-images.githubusercontent.com/24501320/115499359-e3c98000-a2a1-11eb-941a-552833952d87.png)
 经过整理，Array原型中可以改变数组自身内容的方法有7个，分别是：**push,pop,shift,unshift,splice,sort,reverse**。那么源码中的拦截器代码如下：
-```jaavscript
+```javascript
 // 源码位置：/src/core/observer/array.js
 
 const arrayProto = Array.prototype

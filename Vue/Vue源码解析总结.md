@@ -2,7 +2,9 @@
 
 路径：E:\github\vue\src\core\instance\index.js
 主要是定义了Vue构造函数执行_init方法
+[小知识]: 忽略else语句/* istanbul ignore else */
 
+## 初始化阶段
 1.作为参数传给 initMixin(Vue)
 
 initMixin(Vue)路径：E:\github\vue\src\core\instance\init.js
@@ -19,6 +21,7 @@ Vue 的初始化逻辑写的非常清楚，把不同的功能逻辑拆成一些�
 ....
 如果发现配置项上有 el 选项，则自动调用 $mount 方法，也就是说有了 el 选项，就不需要再手动调用 $mount 方法，反之，没提供 el 选项则必须调用 $mount[Vue生命周期流程图]
 
+## 挂载阶段
 接下来则进入**挂载阶段**:在/src/platform/web/entry-runtime-with-compiler.js文件中
 生命周期函数分别有beforeMount和mounted钩子函数
 
@@ -40,7 +43,7 @@ mountComponent 核心就是先实例化一个渲染Watcher，在它的**回调�
 
 我们将挂载阶段所做的工作分成两部分进行了分析，第一部分是**将模板渲染到视图**上，第二部分是**开启对模板中数据（状态）的监控**。两部分工作都完成以后挂载阶段才算真正的完成了。
 
-## 细节[2]
+## 细节[2] 分析render和update
 
 Vue 的 **_render** 方法是实例的一个私有方法，它用来把实例渲染成一个虚拟 Node。它的定义在 src/core/instance/render.js 文件中：定义在 renderMixin 方法中，再E:\github\vue\src\core\instance\index.js中 即传入renderMixin(Vue),定义 Vue.prototype._render 原型方法。
 
@@ -54,3 +57,40 @@ Vue 的 **_update** 方法是实例的一个私有方法，它用来把这个 VN
 它被调用的时机有 2 个，一个是首次渲染，一个是数据更新的时候，_update 的核心就是调用 vm.__patch__ 方法，这个方法实际上在不同的平台，比如 web 和 weex 上的定义是不一样的
 
  vm.__patch__ 方法，这个方法实际上在不同的平台，比如 web 和 weex 上的定义是不一样的，因此在 web 平台中它的定义在 src/platforms/web/runtime/index.js 中：在浏览器环境就直接到patch.js里面
+
+## 销毁阶段
+
+Vue.prototype.$destroy 原型上的方法定义在 E:\github\vue\src\core\instance\lifecycle.js 方法上，当调用了实例上的vm.$destory方法后，实例就进入了销毁阶段，在该阶段所做的主要工作是将当前的Vue实例从其父级实例中删除，取消当前实例上的所有依赖追踪并且移除实例上的所有事件监听器。并且对照源码将所做的工作都进行了逐行分析。
+具体方法的解析见源码里面的**注释**
+
+
+## 细节[1]:分析响应式原理
+
+initState方法：定义在E:\github\vue\src\core\instance\state.js
+- 分别处理 props、methods、data、computed、watch
+- 优先级：props、methods、data、computed 对象中的属性不能出现重复，优先级和列出顺序一致其中 computed 中的 key 不能和 props、data 中的 key 重复，methods 不影响
+
+**前置知识**：Object.defineProperty方法[文档](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+这里我们最关心的是 get 和 set，get 是一个给属性提供的 getter 方法，当我们访问了该属性的时候会触发 getter 方法；set 是一个给属性提供的 setter 方法，当我们对该属性做修改的时候会触发 setter 方法。
+
+初始化**props** 的初始化主要过程，就是遍历定义的 props 配置。遍历的过程主要做两件事情：一个是调用 defineReactive 方法把每个 prop 对应的值变成响应式，可以通过 vm._props.xxx 访问到定义 props 中对应的属性。对于 defineReactive 方法，；另一个是通过 proxy 把 vm._props.xxx 的访问代理到 vm.xxx 上，
+data，methods同理
+
+**proxy**：proxy 方法的实现很简单，通过 Object.defineProperty 把 target[sourceKey][key] 的读写变成了对 target[key] 的读写。所以对于 props 而言，对 vm._props.xxx 的读写变成了 vm.xxx 的读写，而对于 vm._props.xxx 我们可以访问到定义在 props 中的属性，所以我们就可以通过 vm.xxx 访问到定义在 props 中的 xxx 属性了。//vm.key === vm._props.key
+
+computed缓存原理：E:\github\vue\src\core\instance\lifecycle.js
+执行：watcher.evaluate() dirty的值true/false，具体逻辑看源码
+
+watch原理：核心watcher，还有一些对于选项的处理
+
+computed和watch本质上都是一个watcher
+/**
+   * 其实到这里也能看出，computed 和 watch 在本质是没有区别的，都是通过 watcher 去实现的响应式
+   * 非要说有区别，那也只是在使用方式上的区别，简单来说：
+   *   1、watch：适用于当数据变化时执行异步或者开销较大的操作时使用，即需要长时间等待的操作可以放在 watch 中
+   *   2、computed：其中可以使用异步方法，但是没有任何意义。所以 computed 更适合做一些同步计算
+*/
+
+计算属性本质上是 computed watcher，而侦听属性本质上是 user watcher。就应用场景而言，计算属性适合用在模板渲染中，某个值是依赖了其它的响应式对象甚至是计算属性计算而来；而侦听属性适用于观测某个值的变化去完成一段复杂的业务逻辑。
+
+同时我们又了解了 watcher 的 4 个 options，通常我们会在创建 user watcher 的时候配置 deep 和 sync，可以根据不同的场景做相应的配置。

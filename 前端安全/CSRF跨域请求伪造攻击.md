@@ -16,7 +16,7 @@ CSRF(Cross-site request forgery), 即跨站请求伪造，指的是黑客诱导�
 ### 2. 自动发 POST 请求
 黑客可能自己填了一个表单，写了一段自动提交的脚本。
 ```javascript
-<form id='hacker-form' action="https://xxx.com/info" emethod="POST">
+<form id='hacker-form' action="https://xxx.com/info" method="POST">
   <input type="hidden" name="user" value="hhh" />
   <input type="hidden" name="count" value="100" />
 </form>

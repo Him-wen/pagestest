@@ -59,8 +59,7 @@ xhr.send( optionalEncodedData );
 
 
 # 3.XMLHttpRequest 运作机制
-
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/db0ab192107b42b992ace5d8ead67749~tplv-k3u1fbpfcp-watermark.image)
+![image](https://user-images.githubusercontent.com/24501320/116962867-d9fc3f80-acd9-11eb-86a1-ddc2fde02c35.png)
 
 分析从发起请求到接收数据的完整流程。
 首先看一段请求代码：

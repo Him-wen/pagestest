@@ -56,10 +56,88 @@ xhr.send( optionalEncodedData );
 ```
 关于更细节的API：[你不知道的XMLHttpRequest](https://juejin.cn/post/6844903472714743816)
 
+### 其中有几个API：
+FormData：AJAX操作往往用来传递表单数据。为了方便表单处理，HTML 5新增了一个 FormData 对象，可以用于模拟表单。
+Blob：二进制不可变数据
 
+里面包含了 上传数据 和 下载数据  
+### 大文件分块传输
+```javascript
+var blob = ...; // 1
+
+const BYTES_PER_CHUNK = 1024 * 1024; // 2
+const SIZE = blob.size;
+
+var start = 0;
+var end = BYTES_PER_CHUNK;
+
+while(start < SIZE) { // 3
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/upload');
+  xhr.onload = function() { ... };
+
+  xhr.setRequestHeader('Content-Range', start+'-'+end+'/'+SIZE); // 4
+  xhr.send(blob.slice(start, end)); // 5
+
+  start = end;
+  end = start + BYTES_PER_CHUNK;
+}
+```
+(1) 一个任意的数据块 (二进制或文本)
+(2) 将数据库大小设置为 1MB
+(3) 迭代提供的数据，增量为1MB
+(4) 设置上传的数据范围 (Content-Range请求头)
+(5) 通过 XHR 上传 1MB 数据块
+
+### 监听上传和下载进度
+XHR 对象提供了一系列 API，用于监听进度事件，表示请求的当前状态：
+每个 XHR 传输都以 loadstart 事件开始，并以 loadend 事件结束，并在这两个事件期间触发一个或多个附加事件来指示传输的状态。因此，为了监控进度，应用程序可以在 XHR 对象上注册一组 JavaScript 事件侦听器：
+```javascript
+var xhr = new XMLHttpRequest();
+xhr.open('GET','/resource');
+xhr.timeout = 5000; // 1
+
+xhr.addEventListener('load', function() { ... }); // 2
+xhr.addEventListener('error', function() { ... }); // 3
+
+var onProgressHandler = function(event) {
+  if(event.lengthComputable) {
+    var progress = (event.loaded / event.total) * 100; // 4
+    ...
+  }
+}
+
+xhr.upload.addEventListener('progress', onProgressHandler); // 5
+xhr.addEventListener('progress', onProgressHandler); // 6
+xhr.send();
+```
+(1) 设置请求超时时间为 5,000 ms (默认无超时时间)  
+(2) 注册成功回调  
+(3) 注册异常回调  
+(4) 计算已完成的进度  
+(5) 注册上传进度事件回调  
+(6) 注册下载进度事件回调  
+
+### 使用XHR流式传输数据
+### XHR 长轮询
+### XMLHttpRequest 库
+#### fetch.js
+fetch 函数是一个基于 Promise 的机制，用于在浏览器中以编程方式发送 Web 请求。该项目是实现标准 Fetch 规范的一个子集的 polyfill ，足以作为传统 Web 应用程序中 XMLHttpRequest 的代替品。
+详细信息，请参考 - Github - fetch 
+Fetch API 兼容性，请参考 - Can I use Fetch
+
+### 其他知识点
+#### XHR下载图片
+
+#### XHR上传数据
+普通文本  
+FormData  
+Buffer  
+#### XHR 上传进度条
 
 # 3.XMLHttpRequest 运作机制
-![image](https://user-images.githubusercontent.com/24501320/116962867-d9fc3f80-acd9-11eb-86a1-ddc2fde02c35.png)
+
+![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/db0ab192107b42b992ace5d8ead67749~tplv-k3u1fbpfcp-watermark.image)
 
 分析从发起请求到接收数据的完整流程。
 首先看一段请求代码：
@@ -129,3 +207,7 @@ function GetWebData(URL){
 首先我们介绍了回调函数和系统调用栈；  
 接下来我们站在循环系统的视角，分析了 XMLHttpRequest 是怎么工作的；   
 关于浏览器跨域，看另外一篇文章；
+
+参考资料：[工作原理与实践](https://time.geekbang.org/column/article/135127）
+关于更细节的API：[你不知道的XMLHttpRequest](https://juejin.cn/post/6844903472714743816)
+关于 Fetch API：参考 [阮一峰老师教程](https://www.ruanyifeng.com/blog/2020/12/fetch-tutorial.html)

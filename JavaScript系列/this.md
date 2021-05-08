@@ -1,3 +1,6 @@
+this关键字是JavaScript中最复杂的机制之一。它是一个很特别的关键字，被自动定义在所有函数的作用域中。对于那些没有投入时间学习this机制的JavaScript开发者来说，this的绑定一直是一件非常令人困惑的事。
+![image](https://user-images.githubusercontent.com/24501320/117531772-dab50e80-b016-11eb-9034-b17bd038101f.png)
+参考:[你还没搞懂this](https://github.com/ljianshu/Blog/issues/7)
 this指向的是执行环境，执行环境不同指向不同
 ## 调用位置
 在理解 `this` 的绑定过程之前，首先要理解 `this` 的**调用位置**：调用位置就是函数在代码中被调用的位置（而不是声明的位置）。

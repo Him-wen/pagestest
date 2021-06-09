@@ -4,7 +4,7 @@ CSRF(Cross-site request forgery), 即跨站请求伪造，指的是黑客诱导�
 那么恭喜你，被攻击了:）
 你可能会比较好奇，怎么突然就被攻击了呢？接下来我们就来拆解一下当你点击了链接之后，黑客在背后做了哪些事情。
 可能会做三样事情。列举如下：
-### 1. 自动发 GET 请求
+### 1. 自动发 GET 请求 
 黑客网页里面可能有一段这样的代码:
 ```javascript
 <img src="https://xxx.com/info?user=hhh&count=100"></img>

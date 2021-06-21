@@ -34,7 +34,7 @@ baz(); // <-- baz 的调用位置
 ### 默认绑定
 首先要介绍的是最常用的函数调用类型：**独立函数调用**。可以把这条规则看作是无法应用其他规则时的默认规则。
 🌰 **标准示例：**
-```
+```javascript
 function foo() {
 console.log(this.a);
 }
@@ -49,7 +49,7 @@ var a = 2;
 foo();
 // 2
 ```
-```
+```javascript
 如果使用严格模式（Strict Mode），则不能将全局对象用于默认绑定，因此 `this` 会绑定到 `undefined`。
 function foo() {
 'use strict';
@@ -72,7 +72,7 @@ foo(); // 2
 ### 隐式绑定
 另一条需要考虑的规则是调用位置是否有**上下文对象**，或者说是否**被某个对象拥有或者包含**，不过这种说法可能会造成一些误导。
 🌰 **标准示例：**
-```
+```javascript
 function foo() {
 console.log(this.a);
 }
@@ -86,7 +86,7 @@ container.foo(); // 2
 然而，调用位置会使用 `container` 上下文来引用函数，因此你可以说函数被调用时 `container` 对象 **拥有** 或者 **包含** 它。
 无论你如何称呼这个模式，当 `foo` 被调用时，它的前面确实加上了对 `container` 的引用。当函数引用有上下文时，隐式绑定规则会把函数调用中的 `this` 绑定到这个上下文对象。因为调用 `foo` 时 `this` 被绑定到 `container` 上，因此 `this.a` 和 `container.a` 是一样的。
 💡 **对象属性引用链中只有上一层或最后一层在调用位置中起作用。**
-```
+```javascript
 function foo() {
 console.log(this.a);
 }
@@ -103,7 +103,7 @@ obj1.obj2.foo(); // 42
 #### 隐式丢失
 一个最常见的 `this` 绑定问题就是**被隐式绑定的函数会丢失绑定对象**，也就是说它会应用默认绑定，从而把 `this` 绑定到全局对象或者 `undefined` 上（这取决于是否是严格模式）。
 🌰 **标准示例：**
-```
+```javascript
 function foo() {
 console.log(this.a);
 }
@@ -121,7 +121,7 @@ bar();
 📍 虽然 `bar` 是 `container.foo` 的一个引用，但是实际上，它引用的是 `foo` 函数本身，因此此时的 `bar` 其实是一个不带任何修饰的函数调用，因此应用了默认绑定。
 一种更微妙、更常见并且更出乎意料的情况发生在传入回调函数时。
 🌰 **标准示例：**
-```
+```javascript
 function foo() {
 console.log(this.a);
 }
@@ -140,7 +140,7 @@ bar(container.foo);
 ```
 参数传递其实是一种**隐式赋值**，因此我们传入函数时也会被隐式赋值，所以结果和上个示例一样。
 如果把函数传入语言内置的函数而不是传入你自己声明的函数，结果是一样的，没有区别。
-```
+```javascript
 function foo() {
 console.log(this.a);
 }
@@ -162,7 +162,7 @@ JavaScript 提供了 `apply`、`call` 和 `bind` 方法，为创建的所有函�
 #### 硬绑定
 硬绑定可以解决之前提出的丢失绑定的问题。
 🌰 **标准示例：**
-```
+```javascript
 function foo() {
 console.log(ths.a);
 }
@@ -183,7 +183,7 @@ bar.call(window);
 我们创建了函数 `bar`，并在它的内部手动调用了 `foo.call(container)` ，因此强制把 `foo` 的 `this` 绑定到了 `container` 。无论之后如何调用函数 `bar`，它总会手动在 `container` 上调用 `foo`。这种绑定是一种显式（手动）的强制绑定，因此我们称之为**硬绑定**。
 #### 内置函数
 第三方库的许多函数，以及 JavaScript 语言和宿主环境中许多新的内置函数，都提供了一个可选的参数，通常被称为 **上下文（context）**，其作用和 `bind` 一样，确保你的回调函数使用指定的 `this` 。
-```
+```javascript
 function foo(item) {
 console.log(this.title, item);
 }
@@ -211,7 +211,7 @@ const columns = {
 1. 如果构造函数执行后没有返回其他对象，那么 `new` 表达式中的函数调用会自动返回这个新对象
 
 🎯 **模拟过程：**
-```
+```javascript
 function objectFactory(constructor, ...rest) {
 // 创建空对象，空对象关联构造函数的原型对象
 const instance = Object.create(constructor.prototype);
@@ -230,7 +230,7 @@ return instance;
 毫无疑问，默认绑定的优先级是四条规则中最低的，所以我们先不考虑它。
 显式绑定 > new 绑定() > 隐式绑定;
 ### 隐式绑定和显式绑定
-```
+```javascript
 function foo() {
 console.log(this.a);
 }
@@ -253,7 +253,7 @@ container2.foo.call(container1);
 ```
 可以看到，显式绑定优先级更高，也就是说在判断时应当先考虑是否可以存在显式绑定。
 ### new 绑定和隐式绑定
-```
+```javascript
 function foo(something) {
 this.a = something;
 }
@@ -277,7 +277,7 @@ console.log(bar.a);
 `new` 和 `call/apply` 无法一起使用，因此无法通过 `new foo.call(obj1)` 来直接进行测试。但是我们可以使用硬绑定来测试他俩的优先级。
 在看代码之前先回忆一下硬绑定是如何工作的。`Function.prototype.bind` 会创建一个新的包装函数，这个函数会忽略它当前的 `this` 绑定（无论绑定的对象是什么），并把我们提供的对象绑定到 `this` 上。
 这样看起来硬绑定（也是显式绑定的一种）似乎比 `new` 绑定的优先级更高，无法使用 `new` 来控制 `this` 绑定。
-```
+```javascript
 function foo(something) {
 this.a = something;
 }
@@ -295,7 +295,7 @@ console.log(baz.a);
 ## 绑定例外
 ### 忽略指向
 如果将 `null` 或 `undefined` 作为 `this` 的绑定对象传入 `call`、`apply` 或 `bind`，这些值在调用时会被忽略，实际应用的是默认绑定规则。
-```
+```javascript
 function foo() {
 console.log(this.a);
 }
@@ -318,7 +318,7 @@ bar(3);
 ### 软绑定
 硬绑定这种方式可以把 `this` 强制绑定到指定的对象（除了使用 `new` 时），防止函数调用应用默认绑定规则。问题在于，硬绑定会大大降低函数的灵活性，使用硬绑定之后就无法使用隐式绑定或者显式绑定来修改 `this`。
 如果可以给默认绑定指定一个全局对象和 `undefined` 以外的值，那就可以实现和硬绑定相同的效果，同时保留隐式绑定或者显式绑定修改 `this` 的能力。
-```
+```javascript
 if (!Function.prototype.softBind) { Function.prototype.softBind = function(obj) {
 var fn = this;
 // 捕获所有 curried 参数
@@ -342,7 +342,7 @@ return bound; };
 ## 箭头函数
 箭头函数并不是使用 `function` 关键字定义的，而是使用被称为胖箭头的操作符 `=>` 定义的。箭头函数不使用 `this` 的四种标准规则，而是根据外层（函数或者全局）作用域来决定 `this`。并且，箭头函数拥有静态的上下文，即一次绑定之后，便不可再修改。
 `this` 指向的固定化，并不是因为箭头函数内部有绑定 `this` 的机制，实际原因是箭头函数根本没有自己的 `this`，导致内部的 `this` 就是外层代码块的 `this`。正是因为它没有 `this`，所以也就不能用作构造函数。
-```
+```javascript
 function foo() {
 // 返回一个箭头函数
 return a => {
@@ -372,7 +372,7 @@ bar.call(container2);
 1. 箭头函数的调用
 
 你可能遇到过这样的 JS 面试题：
-```
+```javascript
 var obj = {
   foo: function(){
     console.log(this)
@@ -397,7 +397,7 @@ JS（ES5）里面有三种函数调用形式：
 
 
 
-```
+```javascript
 func(p1, p2) 
 obj.child.method(p1, p2)
 func.call(context, p1, p2) // 先不讲 apply
@@ -408,11 +408,11 @@ func.call(context, p1, p2) // 先不讲 apply
 
 一般，初学者都知道前两种形式，而且认为前两种形式「优于」第三种形式。
 从看到这篇文章起，你一定要记住，第三种调用形式，才是正常调用形式：
-```
+```javascript
 func.call(context, p1, p2)
 ```
 其他两种都是语法糖，可以等价地变为 call 形式：
-```
+```javascript
 func(p1, p2) 等价于
 func.call(undefined, p1, p2)
 obj.child.method(p1, p2) 等价于
@@ -420,7 +420,7 @@ obj.child.method.call(obj.child, p1, p2)
 ```
 请记下来。（我们称此代码为「转换代码」，方便下文引用）
 至此我们的函数调用只有一种形式：
-```
+```javascript
 func.call(context, p1, p2)
 ```
 ## 这样，this 就好解释了
@@ -428,14 +428,14 @@ this，就是上面代码中的 context。就这么简单。
 this 是你 call 一个函数时传的 context，由于你从来不用 call 形式的函数调用，所以你一直不知道。
 **先看 func(p1, p2) 中的 this 如何确定：**
 当你写下面代码时
-```
+```javascript
 function func(){
   console.log(this)
 }
 func()
 ```
 用「转换代码」把它转化一下，得到
-```
+```javascript
 function func(){
   console.log(this)
 }
@@ -445,13 +445,13 @@ func.call(undefined) // 可以简写为 func.call()
 如果你传的 context 是 null 或 undefined，那么 window 对象就是默认的 context（严格模式下默认 context 是 undefined）
 因此上面的打印结果是 window。
 如果你希望这里的 this 不是 window，很简单：
-```
+```javascript
 func.call(obj) // 那么里面的 this 就是 obj 对象了
 ```
 
 
 **再看 obj.child.method(p1, p2) 的 this 如何确定**
-```
+```javascript
 var obj = {
   foo: function(){
     console.log(this)
@@ -460,14 +460,14 @@ var obj = {
 obj.foo()
 ```
 按照「转换代码」，我们将 obj.foo() 转换为
-```
+```javascript
 obj.foo.call(obj)
 ```
 好了，this 就是 obj。搞定。
 
 
 回到题目：
-```
+```javascript
 var obj = {
   foo: function(){
     console.log(this)

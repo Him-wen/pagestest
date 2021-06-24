@@ -4,7 +4,7 @@ Function.prototype.bind2 = function (context) {
     var self = this;// 这个this就是调用bind2函数的函数(bar)，函数里面返回函数，很容易出现函数this的丢失
     var args = Array.prototype.slice.call(arguments,1);//arguments是对象不是数组 获取bind2函数从第二个参数到最后一个参数
     var fnzz = function () {};
-    var fn = function () {
+    var fn = function () {// 这是一个构造函数
         // this instanceof fn为true的情况，使用new时this的绑定规则：this指向不是bar，而是一个new的实例，这就是发生了构造函数，所以选this，反之不是new构造函数，就用context这个foo即可按原来的操作
         var bindagrs = Array.prototype.slice.call(arguments);// // 这个时候的arguments是指bind返回的函数传入的参数
         return self.apply(this instanceof fnzz ? this : context, args.concat(bindagrs));// 一个绑定函数也能使用new操作符创建对象：这种行为就像把原函数当成构造器。提供的 this 值被忽略，同时调用时的参数被提供给模拟函数。

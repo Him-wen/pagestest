@@ -75,3 +75,23 @@ var hasCycle = function(head) {
     return false;
 };
 
+//环形链表II
+var detectCycle = function(head) {
+    if(!head) return null;
+    let fast = head;
+    let slow = head;
+    while(fast && fast.next) {
+        fast = fast.next.next;
+        slow = slow.next;
+        if(fast === slow) {//到这一步和环形链表I是一致的
+            var pre = head;//在前面步骤结束后（快慢指针相遇），从头放一个指针，和慢指针一起移动，相遇后就是入环点
+            while(pre!==slow) {
+                pre = pre.next;
+                slow = slow.next;
+            }
+            return pre;
+        }
+    }
+    return null;
+};
+

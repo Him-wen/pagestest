@@ -67,3 +67,25 @@ var combinationSum3 = function(k, n) {
 };
 
 // 电话号码的字母组合：和之前的区别是：这个是不同集合的组合
+var letterCombinations = function(digits) {
+    let res= [];
+    let str = [];
+    let map = { '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl', '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz' };// 映射关系
+    if(!digits.length)return res;
+
+    const dfs = function(index) {
+        if(index === digits.length) {
+            res.push(str.join(''));// 将数组变成字符串
+            return;
+        }
+
+        let dic = map[digits[index]];// 获取index为1 的第一位数字 比如2，对应的abc
+        for(let i=0; i<dic.length; i++) {
+            str.push(dic[i]);// str = [a,b,c]
+            dfs(index+1);
+            str.pop();
+        }
+    }
+    dfs(0);
+    return res;
+};

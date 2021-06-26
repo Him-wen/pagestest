@@ -59,3 +59,19 @@ var mergeTwoLists = function(l1, l2) {// 迭代
     }
     return dummy.next;
 };
+
+//环形链表
+var hasCycle = function(head) {
+    if(!head) return false;
+    let p = head;
+    let q = head;
+    while(p && p.next) {
+        p = p.next.next;
+        q = q.next;
+        if(p === q) {
+            return true;
+        }
+    }
+    return false;
+};
+

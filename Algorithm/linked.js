@@ -114,3 +114,18 @@ var getIntersectionNode = function(headA, headB) {
     }
     return a;
 };
+
+//反转链表（迭代和递归两种）
+var reverseList = function(head) {
+    if(!head) return null;
+    let cur = head;//当前节点
+    let ne = head.next;//当前节点的下一个节点
+    head.next = null;//将头节点指向null
+    while(ne) {//不为空进行循环
+        let temp = ne.next;
+        ne.next = cur;//翻转节点
+        cur = ne;//向后移动一位
+        ne = temp;
+    }
+    return cur;
+};

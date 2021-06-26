@@ -205,3 +205,21 @@ var reserves = function(head) {// 反转链表函数
     return pre;
 }
 
+// 两两交换链表中的节点
+var swapPairs = function(head) {
+    if(!head)return null;
+    // 建立一个虚拟节点
+    let vim = new ListNode(-1);
+    vim.next = head;
+    let pre = vim;
+    
+    while(pre.next && pre.next.next) {// 每二个节点移动
+        let a = pre.next;
+        let b = pre.next.next;
+        pre.next = b;
+        a.next = b.next;
+        b.next = a;
+        pre = a;
+    }
+    return vim.next;
+};

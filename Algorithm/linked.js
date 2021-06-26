@@ -96,6 +96,7 @@ var detectCycle = function(head) {
 };
 
 // 相交链表
+// 两个链表同时向下移动，如果为空了，则移到另一个链表上，如果相遇，则就是相交节点这是因为相交后链表后的元素都是一样的，所以我们要把尾部对齐，a+b和b+a后长度就是一致的，这样就能从尾部对齐元素了。而最多指针也只是会走a+b的长度，之后两者都是空从而退出了循环。
 var getIntersectionNode = function(headA, headB) {
     let a = headA;
     let b = headB;

@@ -129,3 +129,79 @@ var reverseList = function(head) {
     }
     return cur;
 };
+
+// 回文链表
+var isPalindrome = function(head) {
+    if(!head) return true;
+    // 获取中间的节点
+    let fast = head;
+    let slow = head;
+    while(fast && fast.next) {
+        fast = fast.next.next;
+        slow = slow.next;
+    }
+    let left = head;
+    // 获取翻转后的链表
+    let right = reserves(slow);
+    // 比较是否相同
+    while(right) {
+        if(right.val != left.val) {
+            return false;
+        }
+        right = right.next;
+        left = left.next;
+    }
+    return true;
+};
+    // 翻转链表函数
+var reserves = function(head) {
+    let pre = null;
+    let cur = head;
+    while(cur) {
+        let ne = cur.next;
+        cur.next = pre;
+        pre = cur;
+        cur = ne;
+    }
+    return pre;
+}
+
+// 反转链表II
+var reverseBetween = function(head, left, right) {
+    if(!head)return null;
+    const vim = new ListNode(-1);
+    vim.next = head;// 虚拟节点 便于返回
+    let leftnode = vim;// 从虚拟节点开始算
+    for(let i =0; i < left-1; i++) {// 走left-1步
+        leftnode = leftnode.next;// 到达待翻转节点的前一个节点
+    }
+    let rightnode = leftnode;// 从待翻转节点开始
+    for(let i =0; i < right-left+1; i++) {
+        rightnode = rightnode.next;// 到达待翻转节点的最后一个节点
+    }
+    // 将待翻转链表给切出来
+    let leftx = leftnode.next;// 待翻转链表的开始
+    let rightx = rightnode.next;// 待翻转节点的下一个 先记录一下
+
+    leftnode.next = null;// 当为1的时候
+    rightnode.next = null;// 当为4的时候
+
+    reserves(leftx);
+
+    leftnode.next = rightnode;// 将断开的链接接上
+    leftx.next = rightx;
+    return vim.next;
+};
+
+var reserves = function(head) {// 反转链表函数
+    let pre = null;
+    let cur = head;
+    while(cur) {
+        let ne = cur.next;
+        cur.next = pre;
+        pre = cur;
+        cur = ne;
+    }
+    return pre;
+}
+

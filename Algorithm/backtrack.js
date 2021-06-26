@@ -21,6 +21,27 @@ var combine = function(n, k) {
     return res;
 };
 
+// 组合总和
+var combinationSum = function(candidates, target) {
+    let res = [];
+    let link = [];
+    
+    const dfs = function(target, start) {
+        if(target === 0) {
+            res.push([...link])
+          return;
+        }
+        if(target < 0)return;
+        for(let i=start;i<candidates.length;i++) {// start是为了 没有重复的组合
+            link.push(candidates[i]);
+            dfs(target-candidates[i],i);
+            link.pop();
+        } 
+    }
+    dfs(target,0);
+    return res;
+};
+
 //组合总和III找出所有相加之和为 n 的 k 个数的组合。组合中只允许含有 1 - 9 的正整数，并且每种组合中不存在重复的数字。
 var combinationSum3 = function(k, n) {
     let res = [];
@@ -44,3 +65,5 @@ var combinationSum3 = function(k, n) {
     dfs(1);
     return res;
 };
+
+// 电话号码的字母组合：和之前的区别是：这个是不同集合的组合

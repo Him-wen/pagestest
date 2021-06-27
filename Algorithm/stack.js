@@ -61,12 +61,12 @@ var maxSlidingWindow = function(nums, k) {
     let qu = [];// 存取的是下标
     for(let i =0; i<nums.length; i++) {
         // 若队列不为空，且当前元素大于等于队尾所存下标的元素，则弹出队尾
-        while(qu.length && nums[i]>=nums[qu[qu.length - 1]]) {//保证最大的值都是在qu[0]
+        while(qu.length && nums[i]>=nums[qu[qu.length - 1]]) {//保证最大的值都是在qu[0]，如果加入的比已有的还大，就把之前的最大弹出
             qu.pop();
         }
         qu.push(i);
         while(qu[0] <= i - k) {// 判断当前最大值（即队首元素）是否在窗口中，若不在便将其出队(i - k 等于最先的值的位置)
-            qu.shift();
+            qu.shift();// 不管下标为qu[0]的值多大，i也是从0开始，将超过窗口的最前面的值qu[0]删掉
         }
         if(i >= k - 1) {// 超过了三个窗口值的话，就收集最大的qu[0]
             res.push(nums[qu[0]]);

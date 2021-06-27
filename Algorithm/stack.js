@@ -61,7 +61,7 @@ var maxSlidingWindow = function(nums, k) {
     let qu = [];// 存取的是下标
     for(let i =0; i<nums.length; i++) {
         // 若队列不为空，且当前元素大于等于队尾所存下标的元素，则弹出队尾
-        while(qu.length && nums[i]>=qu[qu.length - 1]) {//保证最大的值都是在qu[0]
+        while(qu.length && nums[i]>=nums[qu[qu.length - 1]]) {//保证最大的值都是在qu[0]
             qu.pop();
         }
         qu.push(i);

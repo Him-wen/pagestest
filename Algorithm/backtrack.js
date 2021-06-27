@@ -89,3 +89,29 @@ var letterCombinations = function(digits) {
     dfs(0);
     return res;
 };
+
+//全排列
+var permute = function(nums) {
+    if(!nums.length) return [];
+    let res = [];
+    let link = [];
+    let used = [];// 控制是否有选中
+
+    const dfs = function() {
+        if(link.length === nums.length) {// 选齐了就收集
+            res.push([...link]);
+            return;
+        }
+
+        for(let i =0; i < nums.length; i++) {
+            if(used[i] === false)continue;
+            link.push(nums[i])
+            used[i] = false;
+            dfs();
+            used[i] = true;
+            link.pop();
+        }
+    }
+    dfs();
+    return res;
+};

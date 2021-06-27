@@ -36,3 +36,21 @@ var removeDuplicates = function(s) {
     }
     return stk.join('')//将数组转为字符串
 };
+
+//150. 逆波兰表达式求值
+var evalRPN = function(tokens) {
+    let stk = [];
+    for(let i =0; i<tokens.length; i++) {
+        if(tokens[i]=== '+' || tokens[i]=== '-' || tokens[i]=== '*' || tokens[i]=== '/') {
+            let num2 = stk.pop();// 注意这里的顺序先取num2，再取num1
+            let num1 = stk.pop();
+            if(tokens[i]=== '+') stk.push(num1 + num2);
+            if(tokens[i]=== '-') stk.push(num1 - num2);
+            if(tokens[i]=== '*') stk.push(num1 * num2);
+            if(tokens[i]=== '/') stk.push(num1 / num2 > 0 ? Math.floor(num1 / num2) : Math.ceil(num1 / num2));
+        }else {
+            stk.push(parseInt(tokens[i]));// 不是以上的几个符号
+        }
+    }
+    return stk.pop();
+};

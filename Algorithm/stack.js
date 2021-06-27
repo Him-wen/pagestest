@@ -54,3 +54,23 @@ var evalRPN = function(tokens) {
     }
     return stk.pop();
 };
+
+// 239.滑动窗口最大值
+var maxSlidingWindow = function(nums, k) {
+    let res = [];// 存取对应的结果
+    let qu = [];// 存取的是下标
+    for(let i =0; i<nums.length; i++) {
+        // 若队列不为空，且当前元素大于等于队尾所存下标的元素，则弹出队尾
+        while(qu.length && nums[i]>=qu[qu.length - 1]) {//保证最大的值都是在qu[0]
+            qu.pop();
+        }
+        qu.push(i);
+        while(qu[0] <= i - k) {// 判断当前最大值（即队首元素）是否在窗口中，若不在便将其出队(i - k 等于最先的值的位置)
+            qu.shift();
+        }
+        if(i >= k - 1) {// 超过了三个窗口值的话，就收集最大的qu[0]
+            res.push(nums[qu[0]]);
+        }
+    }
+    return res;
+};

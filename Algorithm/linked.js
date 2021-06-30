@@ -36,7 +36,7 @@ var mergeTwoLists = function(l1, l2) {
         return l1;
     }else {
         l2.next = mergeTwoLists(l1, l2.next);
-        return l2;
+        return l2;l
     }
 };
 var mergeTwoLists = function(l1, l2) {// 迭代
@@ -52,6 +52,7 @@ var mergeTwoLists = function(l1, l2) {// 迭代
         }
         p = p.next;
     }
+    
     if(!l1) {
         p.next = l2;
     } else {

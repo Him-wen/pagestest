@@ -8,11 +8,11 @@ let c = new Promise((resolve,reject)=>{
     resolve('这是上面传过来的值');
 })
 
-Promise.alls = function(promises) {
+Promise.alls = function(promises) {// 方法返回一个Promise
     return new Promise((resolve,reject) =>{
         let result = [];// 结果数组
         let len =promises.length;
-        if(len == 0){
+        if(len == 0){// 边界情况判断
             resolve(result);
             return;
         }
@@ -41,7 +41,7 @@ Promise.races = function(promises){
         for(let i=0; i<len; i++){
             Promise.resolve(promises[i]).then((res)=>{
                 resolve(res);
-                return;
+                return;// 和all相比多了 一个返回
             }).catch((error)=>{
                 reject(res);
                 return;
@@ -58,7 +58,7 @@ Promise.races([a,b]).then((res)=>{
     console.log(err);
 })
 
-Promise.allses([a,b,c]).then((res)=>{
+Promise.alls([a,b,c]).then((res)=>{
     console.log(res);
 }).catch((err)=>{
     console.log(err);

@@ -1,3 +1,9 @@
+/**
+ * 方法：往参数对象上将该函数放上去(函数调用的时候)
+ * @param {*} context 
+ * @param {*} arr 
+ * @returns 
+ */
 Function.prototype.apply2 = function(context,arr) {
     context = context ||window;
     context.fn = this;// 将bar函数放到context对象的fn零食属性上面的

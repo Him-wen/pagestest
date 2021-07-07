@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>About elk</title>
+</head>
+<body>
+  <div id="test"></div>
+  <style>
+    #test{
+      width: 100px;
+      height: 100px;
+      border: 1px solid red;
+      background-color: sienna;
+    }
+  </style>
+  <script>
+      const test = document.querySelector("#test");
+    let i = 0;
+    let requestId;
+    function animation() {
+      test.style.marginLeft = `${i}px`;
+      requestId = requestAnimationFrame(animation);
+      i++;
+      if(i > 200) {
+        cancelAnimationFrame(requestId);
+      }
+    }
+    animation();
+  </script>
+</body>
+</html>
